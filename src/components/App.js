@@ -5,7 +5,7 @@ import Footer from "./Footer.js";
 import PopupNewAvatar from "./PopupNewAvatar.js";
 import PopupNewPlace from "./PopupNewPlace.js";
 import PopupUserInfo from "./PopupUserInfo.js";
-import PopupFullImage from "./PopupFullImage.js";
+import ImagePopup from "./ImagePopup.js";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=React.useState(false);
@@ -44,7 +44,7 @@ function App() {
      isOpen={isEditAvatarPopupOpen}
      onClose={closeAllPopups}
   />
-  <PopupFullImage card={selectedCard} onClose={closeAllPopups} />
+  <ImagePopup card={selectedCard} onClose={closeAllPopups} />
   <Footer />
 </body>
 

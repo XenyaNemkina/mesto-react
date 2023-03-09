@@ -1,6 +1,6 @@
 import React from "react";
 
-function PopupFullImage({card, onClose}) {
+function ImagePopup({card, onClose}) {
   return (
 <section className={`popup popup_full-image ${card.link ? "popup_is-opened" : ""}`}>
       <div className="popup__container popup__container_full-image">
@@ -12,4 +12,4 @@ function PopupFullImage({card, onClose}) {
   )
 }
 
-export default PopupFullImage;
+export default ImagePopup;
