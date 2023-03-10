@@ -14,7 +14,7 @@ function handleCardClick() {
             <h2 className="element__text">{card.name}</h2>
             <div className="element__likes"> 
               <button className="element__like" type="button"></button>
-              <p className="element__counter">{card.likes.lenght}</p>
+              <p className="element__counter">{card.likes.length}</p>
             </div>
           <button className="element__basket" type="button"></button>
         </div>

@@ -24,7 +24,7 @@ function App() {
     setSelectedCard({});
   }
   return (
-<body className="page">
+<div style={{backgroundColor: 'black'}}>
   <Header />
   <Main
     onEditProfile={handleEditProfileClick}
@@ -46,7 +46,7 @@ function App() {
   />
   <ImagePopup card={selectedCard} onClose={closeAllPopups} />
   <Footer />
-</body>
+</div>
 
 );
 }
