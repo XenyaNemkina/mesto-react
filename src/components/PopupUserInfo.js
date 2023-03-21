@@ -1,17 +1,42 @@
 import React from "react";
-import PopupWithForm from "./PopupWithForm";
+import PopupWithForm from "./PopupWithForm.js";
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
-function PopupUserInfo({isOpen, onClose}) {
+function PopupUserInfo({isOpen, onClose, onUpdateUser}) {
+  const currentUser = React.useContext(CurrentUserContext);
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+
+  React.useEffect(() => {
+    setName(currentUser?.name || '');
+    setDescription(currentUser?.about || '');
+  }, [currentUser, isOpen]);
+
+  function handleName(evt) {
+    setName(evt.target.value)
+  }
+
+  function handleDescription(evt) {
+    setDescription(evt.target.value)
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onUpdateUser({ name, about: description });
+    console.log( name)
+  } 
+
   return (
     <PopupWithForm 
     isOpen={isOpen}
     onClose={onClose}
+    onSubmit={handleSubmit}
     name='profile' 
     title='Редактировать профиль' 
     buttonText='Сохранить'>
-      <input id="name" type="text" name="name" className="popup__field popup__field_type_nickname" placeholder="Имя" autoComplete="off" minLength="2" maxLength="40" required />
+      <input id="name" type="text" name="name" className="popup__field popup__field_type_nickname" placeholder="Имя" autoComplete="off" minLength="2" maxLength="40" required value={name || ""} onChange={handleName} />
       <span id="name-error" className="popup__error popup__error_active"></span>
-      <input id="prof" type="text" name="about" className="popup__field popup__field_type_prof" placeholder="О себе" autoComplete="off" minLength="2" maxLength="200" required />
+      <input id="prof" type="text" name="about" className="popup__field popup__field_type_prof" placeholder="О себе" autoComplete="off" minLength="2" maxLength="200" required value={description || ""} onChange={handleDescription} />
       <span id="prof-error" className="popup__error popup__error_active"></span>
     </PopupWithForm> 
   )
