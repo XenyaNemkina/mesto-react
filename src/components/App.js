@@ -7,7 +7,7 @@ import AddPlacePopup from "./AddPlacePopup.js";
 import EditProfilePopup from "./EditProfilePopup.js"; 
 import ImagePopup from "./ImagePopup.js"; 
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
-import { api } from "../utils/api.js";
+import { api } from "../../src/utils/api.js";
 
 function App() { 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=React.useState(false); 
