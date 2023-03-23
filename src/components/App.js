@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import Header from "./Header.js"; 
 import Main from "./Main.js"; 
 import Footer from "./Footer.js"; 
-import PopupNewAvatar from "./PopupNewAvatar.js"; 
-import PopupNewPlace from "./PopupNewPlace.js"; 
-import PopupUserInfo from "./PopupUserInfo.js"; 
+import EditAvatarPopup from "./EditAvatarPopup.js"; 
+import AddPlacePopup from "./AddPlacePopup.js"; 
+import EditProfilePopup from "./EditProfilePopup.js"; 
 import ImagePopup from "./ImagePopup.js"; 
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
-import { apiNew } from "../utils/api.js";
+import { api } from "../utils/api.js";
 
 function App() { 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=React.useState(false); 
@@ -16,9 +16,9 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = useState([]);
-  const [isPopupNewAvatarOnLoading, setPopupNewAvatarButtonText] = useState(false);
-  const [isPopupUserInfoOnLoading, setPopupUserInfoButtonText] = useState(false);
-  const [isPopupNewPlaceOnLoading, setPopupNewPlaceButtonText] = useState(false);
+  const [isEditAvatarPopupOnLoading, setEditAvatarPopupButtonText] = useState(false);
+  const [isEditProfilePopupOnLoading, setEditProfilePopupButtonText] = useState(false);
+  const [isAddPlacePopupOnLoading, setAddPlacePopupButtonText] = useState(false);
   
   const handleEditProfileClick = () => {setIsEditProfilePopupOpen("popup_is-opened")}; 
   const handleAddPlaceClick = () => {setIsAddPlacePopupOpen("popup_is-opened")}; 
@@ -32,7 +32,7 @@ function App() {
   } 
 
   useEffect(() => {
-    Promise.all([apiNew.getUserInfo(), apiNew.getInitialCards()])
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([userData, data]) => {
         setCurrentUser(userData);
         setCards(data); 
@@ -53,7 +53,7 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    apiNew.changeLikeCardStatus(card._id, isLiked)
+    api.changeLikeCardStatus(card._id, isLiked)
     .then((newCard) => {
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })
@@ -63,7 +63,7 @@ function App() {
   } 
 
   function handleCardDelete(card) {
-    apiNew.deleteCard(card._id)
+    api.deleteCard(card._id)
     .then(() => {
       setCards((state) => state.filter((i) => i._id !== card._id))
     })
@@ -73,8 +73,8 @@ function App() {
   }
 
   function handleUpdateUser(userData) {
-    setPopupUserInfoButtonText(true);
-    apiNew.setUserInfo(userData)
+    setEditProfilePopupButtonText(true);
+    api.setUserInfo(userData)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -83,13 +83,13 @@ function App() {
         console.log(err);
       })
       .finally(() => {
-        setPopupUserInfoButtonText(false);
+        setEditProfilePopupButtonText(false);
       })
   }
 
   function handleUpdateAvatar(avatar) {
-    setPopupNewAvatarButtonText(true);
-    apiNew.editAvatar(avatar)
+    setEditAvatarPopupButtonText(true);
+    api.editAvatar(avatar)
       .then((newUserInfo) => {
         setCurrentUser(newUserInfo);
         closeAllPopups();
@@ -98,13 +98,13 @@ function App() {
         console.log(err);
       })
       .finally(() => {
-        setPopupNewAvatarButtonText(false);
+        setEditAvatarPopupButtonText(false);
       })
   }
 
   function handleAddPlace(data) {
-    setPopupNewPlaceButtonText(true);
-    apiNew.addCard(data)
+    setAddPlacePopupButtonText(true);
+    api.addCard(data)
     .then((newCard) => {
       setCards((state) => [newCard, ...state]);
       closeAllPopups();
@@ -113,7 +113,7 @@ function App() {
       console.log(err);
     })
     .finally(() => {
-      setPopupNewPlaceButtonText(false);
+      setAddPlacePopupButtonText(false);
     })
   }
 
@@ -130,23 +130,23 @@ function App() {
     onCardLike={handleCardLike} 
     onCardDelete={handleCardDelete}
     /> 
-  <PopupUserInfo  
+  <EditProfilePopup  
     isOpen={isEditProfilePopupOpen} 
     onClose={closeAllPopups} 
     onUpdateUser={handleUpdateUser}
-    onLoading={isPopupUserInfoOnLoading}
+    onLoading={isEditProfilePopupOnLoading}
   />  
-  <PopupNewPlace 
+  <AddPlacePopup 
     isOpen={isAddPlacePopupOpen} 
     onClose={closeAllPopups}
     onAddPlace={handleAddPlace}
-    onLoading={isPopupNewPlaceOnLoading} 
+    onLoading={isAddPlacePopupOnLoading} 
   /> 
-  <PopupNewAvatar 
+  <EditAvatarPopup 
      isOpen={isEditAvatarPopupOpen} 
      onClose={closeAllPopups} 
      onUpdateAvatar={handleUpdateAvatar}
-     onLoading={isPopupNewAvatarOnLoading}
+     onLoading={isEditAvatarPopupOnLoading}
   /> 
   <ImagePopup card={selectedCard} onClose={closeAllPopups} /> 
   <Footer /> 

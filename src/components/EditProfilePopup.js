@@ -2,7 +2,7 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
-function PopupUserInfo({isOpen, onClose, onUpdateUser, onLoading}) {
+function EditProfilePopup({isOpen, onClose, onUpdateUser, onLoading}) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -41,4 +41,4 @@ function PopupUserInfo({isOpen, onClose, onUpdateUser, onLoading}) {
   )
 }
 
-export default PopupUserInfo;
+export default EditProfilePopup;

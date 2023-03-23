@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function PopupNewAvatar({isOpen, onClose, onUpdateAvatar, onLoading}) {
+function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, onLoading}) {
   const avaRef = React.useRef();
 
   React.useEffect(() => {
@@ -29,4 +29,4 @@ function PopupNewAvatar({isOpen, onClose, onUpdateAvatar, onLoading}) {
   )
 }
 
-export default PopupNewAvatar;
+export default EditAvatarPopup;
