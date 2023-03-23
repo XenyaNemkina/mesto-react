@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function PopupNewAvatar({isOpen, onClose, onUpdateAvatar}) {
+function PopupNewAvatar({isOpen, onClose, onUpdateAvatar, onLoading}) {
   const avaRef = React.useRef();
 
   React.useEffect(() => {
@@ -22,7 +22,7 @@ function PopupNewAvatar({isOpen, onClose, onUpdateAvatar}) {
     onSubmit={handleSubmit}
     name='new-avatar' 
     title='Обновить аватар' 
-    buttonText='Сохранить'>
+    buttonText={onLoading ? "Сохранение..." : "Сохранить"}>
       <input id="avatar" name="link" className="popup__field popup__field_type_src" placeholder="Ссылка на аватар" autoComplete="off" type="url" required ref={avaRef} />
       <span id="avatar-error" className="popup__error popup__error_active"></span>
     </PopupWithForm> 

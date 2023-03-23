@@ -2,7 +2,7 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
-function PopupUserInfo({isOpen, onClose, onUpdateUser}) {
+function PopupUserInfo({isOpen, onClose, onUpdateUser, onLoading}) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -22,8 +22,7 @@ function PopupUserInfo({isOpen, onClose, onUpdateUser}) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onUpdateUser({ name, about: description });
-    console.log( name)
+    onUpdateUser( {name, about: description} );
   } 
 
   return (
@@ -33,7 +32,7 @@ function PopupUserInfo({isOpen, onClose, onUpdateUser}) {
     onSubmit={handleSubmit}
     name='profile' 
     title='Редактировать профиль' 
-    buttonText='Сохранить'>
+    buttonText={onLoading ? "Сохранение..." : "Сохранить"}>
       <input id="name" type="text" name="name" className="popup__field popup__field_type_nickname" placeholder="Имя" autoComplete="off" minLength="2" maxLength="40" required value={name || ""} onChange={handleName} />
       <span id="name-error" className="popup__error popup__error_active"></span>
       <input id="prof" type="text" name="about" className="popup__field popup__field_type_prof" placeholder="О себе" autoComplete="off" minLength="2" maxLength="200" required value={description || ""} onChange={handleDescription} />

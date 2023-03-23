@@ -22,13 +22,13 @@ class api {
   } 
 
   //добавление информации о пользователе 
-  setUserInfo(data) { 
+  setUserInfo({name, about}) { 
     return fetch(`${this._baseUrl}/users/me`, { 
       method: 'PATCH', 
       headers: this._headers, 
       body: JSON.stringify({ 
-        name: data.name,  
-        about: data.about,  
+        name,  
+        about,  
     }) 
     }) 
     .then(this._getResponseData)  
@@ -40,13 +40,13 @@ class api {
       method: 'PATCH', 
       headers: this._headers, 
       body: JSON.stringify({ 
-        avatar: data.link, 
+        avatar: `${data.avatar}`
       }) 
     }) 
     .then(this._getResponseData)  
   } 
 
-  addCard(name, link) { 
+  addCard({name, link}) { 
     return fetch(`${this._baseUrl}/cards`, { 
       method: 'POST', 
       headers: this._headers, 
@@ -82,9 +82,6 @@ class api {
       .then(this._getResponseData) 
     }
   }}
-
-
- 
 
 export const apiNew = new api({ 
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-59', 

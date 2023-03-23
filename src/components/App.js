@@ -14,9 +14,12 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=React.useState(false); 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=React.useState(false); 
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = useState([]);
-
+  const [isPopupNewAvatarOnLoading, setPopupNewAvatarButtonText] = useState(false);
+  const [isPopupUserInfoOnLoading, setPopupUserInfoButtonText] = useState(false);
+  const [isPopupNewPlaceOnLoading, setPopupNewPlaceButtonText] = useState(false);
+  
   const handleEditProfileClick = () => {setIsEditProfilePopupOpen("popup_is-opened")}; 
   const handleAddPlaceClick = () => {setIsAddPlacePopupOpen("popup_is-opened")}; 
   const handleEditAvatarClick = () => {setIsEditAvatarPopupOpen("popup_is-opened")}; 
@@ -39,6 +42,15 @@ function App() {
       })
     }, []);
 
+  useEffect(() => {
+    function handleEscClose(evt) {
+      if (evt.key === "Escape") {
+        closeAllPopups();
+      }
+    }
+    window.addEventListener("keydown", handleEscClose);
+  return () => window.removeEventListener("keydown", handleEscClose);}, []);
+
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     apiNew.changeLikeCardStatus(card._id, isLiked)
@@ -60,8 +72,9 @@ function App() {
     })
   }
 
-  function handleUpdateUser({userData}) {
-    apiNew.setUserInfo({userData})
+  function handleUpdateUser(userData) {
+    setPopupUserInfoButtonText(true);
+    apiNew.setUserInfo(userData)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -69,18 +82,40 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
+      .finally(() => {
+        setPopupUserInfoButtonText(false);
+      })
   }
 
-function handleUpdateAvatar({avatar}) {
-  apiNew.editAvatar(avatar)
-    .then((newUserInfo) => {
-      setCurrentUser(newUserInfo);
+  function handleUpdateAvatar(avatar) {
+    setPopupNewAvatarButtonText(true);
+    apiNew.editAvatar(avatar)
+      .then((newUserInfo) => {
+        setCurrentUser(newUserInfo);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setPopupNewAvatarButtonText(false);
+      })
+  }
+
+  function handleAddPlace(data) {
+    setPopupNewPlaceButtonText(true);
+    apiNew.addCard(data)
+    .then((newCard) => {
+      setCards((state) => [newCard, ...state]);
       closeAllPopups();
     })
     .catch((err) => {
       console.log(err);
     })
-}
+    .finally(() => {
+      setPopupNewPlaceButtonText(false);
+    })
+  }
 
   return ( 
 <div style={{backgroundColor: 'black'}}> 
@@ -99,15 +134,19 @@ function handleUpdateAvatar({avatar}) {
     isOpen={isEditProfilePopupOpen} 
     onClose={closeAllPopups} 
     onUpdateUser={handleUpdateUser}
+    onLoading={isPopupUserInfoOnLoading}
   />  
   <PopupNewPlace 
     isOpen={isAddPlacePopupOpen} 
-    onClose={closeAllPopups} 
+    onClose={closeAllPopups}
+    onAddPlace={handleAddPlace}
+    onLoading={isPopupNewPlaceOnLoading} 
   /> 
   <PopupNewAvatar 
      isOpen={isEditAvatarPopupOpen} 
      onClose={closeAllPopups} 
      onUpdateAvatar={handleUpdateAvatar}
+     onLoading={isPopupNewAvatarOnLoading}
   /> 
   <ImagePopup card={selectedCard} onClose={closeAllPopups} /> 
   <Footer /> 
